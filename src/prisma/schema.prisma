@@ -1,0 +1,23 @@
+datasource db {
+  provider = "mongodb"
+  url = env("MONGODB_URI")
+}
+
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model LoanApplication {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime
+  employmentStatus  String
+  monthlyIncome     Float
+  loanType          String
+  loanAmount        Float
+  loanPurpose       String
+  creditScore       Int
+  loanPurposeExplanation String
+}
