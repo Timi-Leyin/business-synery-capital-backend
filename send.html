@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="proofOfIdentity" />
+
+    <br />
+    <button id="btn">Test</button>
+    <script>
+      btn.addEventListener("click", async () => {
+        let headersList = {
+          Accept: "*/*",
+        };
+
+        let bodyContent = new FormData();
+        bodyContent.append("lastName", "Timi");
+        bodyContent.append("dateOfBirth", "2023-09-13T00:00:00.000Z");
+        bodyContent.append("employmentStatus", "idg");
+        bodyContent.append("monthlyIncome", 99.9);
+        bodyContent.append("loanType", "idgidg");
+        bodyContent.append("loanAmount", "idg");
+        bodyContent.append("loanPurpose", "idg");
+        bodyContent.append("creditScore", "9892");
+        bodyContent.append("loanPurposeExplanation", "i dont know");
+        bodyContent.append("firstName", "original");
+        bodyContent.append("proofOfIdentity", proofOfIdentity.files[0]);
+
+        let response = await fetch("http://localhost:3030/api/form-submit", {
+          method: "POST",
+          body: bodyContent,
+          headers: headersList,
+        });
+
+        let data = await response.text();
+        console.log(data);
+      });
+    </script>
+  </body>
+</html>
