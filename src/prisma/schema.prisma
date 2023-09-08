@@ -14,10 +14,10 @@ model LoanApplication {
   lastName          String
   dateOfBirth       DateTime
   employmentStatus  String
-  monthlyIncome     Float
+  monthlyIncome     String
   loanType          String
-  loanAmount        Float
+  loanAmount        String
   loanPurpose       String
-  creditScore       Int
+  creditScore       String
   loanPurposeExplanation String
 }
