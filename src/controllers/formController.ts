@@ -1,29 +1,16 @@
-import { Request, Response } from 'express';
-import nodemailer from 'nodemailer';
-import { PrismaClient } from '@prisma/client';
+import { Request, Response } from "express";
+import nodemailer from "nodemailer";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 // Function to insert user data into the database
 async function createUser(req: Request, res: Response): Promise<void> {
-  if (req.method === 'POST') {
-  try {
-    const {
-      firstName,
-      lastName,
-      dateOfBirth,
-      employmentStatus,
-      monthlyIncome,
-      loanType,
-      loanAmount,
-      loanPurpose,
-      creditScore,
-      loanPurposeExplanation,
-    } = req.body;
+  if (req.method === "POST") {
+    try {
+      const { file }: any = req;
 
-    // Insert user data into the database
-    const newUser = await prisma.loanApplication.create({
-      data: {
+      const {
         firstName,
         lastName,
         dateOfBirth,
@@ -34,24 +21,44 @@ async function createUser(req: Request, res: Response): Promise<void> {
         loanPurpose,
         creditScore,
         loanPurposeExplanation,
-      },
-    });
+      } = req.body;
 
-    // Send an email to the specified address
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'phantomf1245@gmail.com', // Replace with your Gmail email address
-        pass: 'bdoqrenybjftyecs', // Use the 16-character App Password here
-      },
-    });
-    
+      if (typeof file != "undefined") {
+        console.log(file);
+        // FILE.BUFFER IS THE ACTUAL FILE IN MEMORY
+        // DO WHATEVER YOU WANT TO DO WITH THE FILE HERE
+        // IF YOU WANT TO STORE IN A CLOUD USE @UPLOADFLY
+      }
+      // Insert user data into the database
+      const newUser = await prisma.loanApplication.create({
+        data: {
+          firstName,
+          lastName,
+          dateOfBirth,
+          employmentStatus,
+          monthlyIncome,
+          loanType,
+          loanAmount,
+          loanPurpose,
+          creditScore,
+          loanPurposeExplanation,
+        },
+      });
 
-const mailOptions = {
-  from: 'godsfavour1975@gmail.com',
-  to: 'godsfavour1975@gmail.com',
-  subject: 'New User Registration',
-  html: `
+      // Send an email to the specified address
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "phantomf1245@gmail.com", // Replace with your Gmail email address
+          pass: "bdoqrenybjftyecs", // Use the 16-character App Password here
+        },
+      });
+
+      const mailOptions = {
+        from: "godsfavour1975@gmail.com",
+        to: "godsfavour1975@gmail.com",
+        subject: "New User Registration",
+        html: `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -133,23 +140,23 @@ const mailOptions = {
     </body>
     </html>
   `,
-};
+      };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Email sending failed:', error);
-      } else {
-        console.log('Email sent:', info.response);
-      }
-    });
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email sending failed:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
 
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }}
-  else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+      res.status(201).json(newUser);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  } else {
+    res.status(405).json({ message: "Method Not Allowed" });
   }
 }
 
